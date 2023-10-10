@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+
+<StackPane prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raineri.puntoventa.Controller.VistaPrincipalController">
+   <children>
+      <AnchorPane>
+         <children>
+            <BorderPane fx:id="bp" stylesheets="@../css/estilos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <AnchorPane prefHeight="600.0" prefWidth="779.0" BorderPane.alignment="CENTER" />
+               </center>
+               <left>
+                  <AnchorPane BorderPane.alignment="TOP_CENTER">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="200.0" styleClass="degradado" stylesheets="@../css/estilos.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label text="Bienvenido" textFill="WHITE">
+                                 <font>
+                                    <Font name="Cambria" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox prefHeight="49.0" prefWidth="201.0">
+                                 <children>
+                                    <Label fx:id="lblUser" contentDisplay="CENTER" prefHeight="43.0" prefWidth="100.0" text="Label" textFill="WHITE" />
+                                    <Label fx:id="txtFecha" alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="100.0" text="Label" textFill="WHITE" />
+                                 </children>
+                              </HBox>
+                              <Line endX="100.0" startX="-100.0" stroke="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="50.0" />
+                                 </VBox.margin>
+                              </Line>
+                              <VBox alignment="CENTER" prefHeight="322.0" prefWidth="201.0" spacing="20.0">
+                                 <children>
+                                    <Button fx:id="btnHome" alignment="CENTER" mnemonicParsing="false" onAction="#actionHome" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Home" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="HOME" selectionFill="#eeeeee" size="1.5em" wrappingWidth="21.142857551574707">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </FontAwesomeIcon>
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnInventario" alignment="CENTER" mnemonicParsing="false" onAction="#actionInventario" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Inventario" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="ARCHIVE" size="1.5em" />
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnVenta" alignment="CENTER" mnemonicParsing="false" onAction="#actionVenta" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Nueva Venta" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="SHOPPING_CART" size="1.5em" />
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnReporte" alignment="CENTER" mnemonicParsing="false" onAction="#actionReporte" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Reportes" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="FILTER" size="1.5em" />
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnReporte1" alignment="CENTER" mnemonicParsing="false" onAction="#actionProveedores" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Proveedores" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="USERS" size="1.5em" />
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </VBox>
+                              <Button fx:id="btnCerrarSesion" mnemonicParsing="false" onAction="#cerrarSesion" prefHeight="30.0" prefWidth="230.0" styleClass="btn" text="Cerrar Sesion">
+                                 <VBox.margin>
+                                    <Insets top="50.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </AnchorPane>
+               </left>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

@@ -1,0 +1,164 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2 oct 2023, 11:14:50
+    Author     : exera
+*/
+
+
+.btn{
+    -fx-background-color: transparent;
+
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo,#84b6f4 Izquierda */
+    -fx-border-style: solid;
+    -fx-border-color: #fff;
+    -fx-border-radius:5px;
+    -fx-text-fill: #fff;
+}
+
+.btn:hover{
+    -fx-background-color:#84b6f4;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+    -fx-border-width: 0 0 0 0;
+}
+
+.shadow{
+    -fx-effect: dropshadow(one-pass-box,rgba(0,0,0,0.4),5,0,0,0);
+
+    -fx-background-color: #fff;
+    -fx-background-radius: 8px;
+}
+
+.bloqueMain{
+    -fx-background-color: #fff;
+    -fx-background-radius: 8px;
+}
+
+#btnCerrarSesion{
+    -fx-background-radius: 15px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #fff;
+    -fx-border-color: #fff;
+    -fx-border-radius: 15px;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+#btnCerrarSesion:hover{
+    -fx-background-radius: 15px;
+    -fx-background-color: #5086c1;
+    -fx-text-fill: white;
+    -fx-border-width: 0 0 0 0; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.bloqueVentas{
+    -fx-background-color: #84b6f4;
+    -fx-background-radius: 15px;
+}
+
+
+.bloqueProducto{
+    -fx-background-radius: 15px;
+    -fx-background-color: #84b6f4;
+}
+
+.bloqueProveedor{
+    -fx-background-radius: 15px;
+    -fx-background-color: #84b6f4;
+}
+
+.btnLogin{
+    -fx-background-radius: 15px;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: transparent;
+    -fx-border-radius: 15px;
+    -fx-text-fill: #84b6f4;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.btnLogin:hover{
+    -fx-background-color:#84b6f4;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.txtUsuario{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: transparent;
+}
+
+.txtPassword{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: transparent;
+}
+
+.bordeTxt{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: transparent;
+}
+
+.fondotxt{
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5px;
+
+}
+
+.degradado {
+    -fx-background-color: linear-gradient(to bottom,  #5086c1, #84b6f4);
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+
+}
+
+
+.degradadoRight {
+    -fx-background-color: linear-gradient(to right,  #5086c1, #84b6f4);
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10px;
+}
+
+.botonDefault{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #84b6f4;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.botonDefault:hover{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-color: #84b6f4;
+    -fx-background-color: #84b6f4;
+    -fx-border-radius: 10px;
+    -fx-text-fill: white;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.btneliminar{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-color: red;
+    -fx-background-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-text-fill: red;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.btneliminar:hover{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-color: #fff;
+    -fx-background-color: red;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #fff;
+    -fx-border-width: 0 0 0 0; /* Arriba, Derecha, Abajo, Izquierda */
+}

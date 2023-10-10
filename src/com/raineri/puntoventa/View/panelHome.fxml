@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="779.0" styleClass="mainFxmlClass" stylesheets="@../css/estilos.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raineri.puntoventa.Controller.PanelHomeController">
+   <children>
+      <AnchorPane layoutX="16.0" layoutY="14.0" prefHeight="182.0" prefWidth="751.0" styleClass="shadow" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <HBox alignment="CENTER" layoutY="40.0" prefHeight="102.0" prefWidth="759.0" spacing="20.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+               <children>
+                  <AnchorPane prefHeight="129.0" prefWidth="234.0" styleClass="degradadoRight">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" layoutX="122.0" layoutY="26.0" prefHeight="20.0" prefWidth="98.0" text="Productos" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCantProductos" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="122.0" layoutY="56.0" prefHeight="31.0" prefWidth="98.0" text="120" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIcon iconName="ARCHIVE" layoutX="14.0" layoutY="77.0" size="5em" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="112.0" prefWidth="226.0" styleClass="degradadoRight">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" layoutX="92.0" layoutY="26.0" prefHeight="20.0" prefWidth="120.0" text="Proveedores" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCantProveedores" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="92.0" layoutY="56.0" prefHeight="31.0" prefWidth="120.0" text="50" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIcon iconName="GROUP" layoutX="14.0" layoutY="77.0" size="5em" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="112.0" prefWidth="234.0" styleClass="degradadoRight">
+                     <children>
+                        <FontAwesomeIcon iconName="SHOPPING_CART" layoutX="13.0" layoutY="77.0" size="5EM" wrappingWidth="69.0" />
+                        <Label alignment="CENTER_RIGHT" layoutX="79.0" layoutY="26.0" prefHeight="20.0" prefWidth="142.0" text="Ventas de Hoy" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCantVentas" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="79.0" layoutY="56.0" prefHeight="31.0" prefWidth="142.0" text="20" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="10.0" layoutY="212.0" prefHeight="380.0" prefWidth="752.0" styleClass="shadow" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="212.0">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="21.0" prefHeight="380.0" prefWidth="752.0" style="-fx-background-color: lightblue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <LineChart fx:id="lineChart" layoutX="-37.0" layoutY="-63.0" prefHeight="307.0" prefWidth="728.0" title="Ventas Mensuales" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <xAxis>
+                      <CategoryAxis label="Mes" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis label="Importe" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="501.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="com.raineri.puntoventa.Controller.PanelVerDetalleController">
+   <children>
+      <VBox alignment="CENTER_LEFT" layoutX="157.0" layoutY="300.0" prefHeight="554.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Separator />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0">
+                     <children>
+                        <Label alignment="CENTER" text="Raineri Rodamientos">
+                           <font>
+                              <Font name="System Bold Italic" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Aristobulo del Valle 588">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0">
+                     <children>
+                        <Label fx:id="lblNroFactura" text="N° Factura: 00016">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblFechaYHora" text="Fecha y Hora: 08/10/2023 11:49:25">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <TableView fx:id="tablaDetalle" prefHeight="199.0" prefWidth="401.0">
+              <columns>
+                <TableColumn fx:id="col_id" editable="false" prefWidth="31.0" resizable="false" text="#" />
+                <TableColumn fx:id="col_codigo" editable="false" prefWidth="55.0" resizable="false" text="Codigo" />
+                  <TableColumn fx:id="col_descripcion" editable="false" prefWidth="163.0" resizable="false" text="Descripción" />
+                  <TableColumn fx:id="col_cantidad" editable="false" prefWidth="61.0" resizable="false" text="Cant." />
+                  <TableColumn fx:id="col_subtotal" editable="false" prefWidth="89.0" resizable="false" text="Importe" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </TableView>
+            <Label fx:id="lblTotal" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="415.0" text="Total: $12.500,35">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="50.0" right="50.0" />
+   </padding>
+</AnchorPane>
