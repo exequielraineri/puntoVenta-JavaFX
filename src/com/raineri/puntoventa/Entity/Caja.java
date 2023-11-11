@@ -5,6 +5,7 @@
 package com.raineri.puntoventa.Entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -28,6 +31,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "Caja.findByImporte", query = "SELECT c FROM Caja c WHERE c.importe = :importe"),
     @NamedQuery(name = "Caja.findByTipo", query = "SELECT c FROM Caja c WHERE c.tipo = :tipo")})
 public class Caja implements Serializable {
+
+    @Column(name = "fechaRegistro")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaRegistro;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -105,6 +112,14 @@ public class Caja implements Serializable {
     @Override
     public String toString() {
         return "com.raineri.puntoventa.Entity.Caja[ id=" + id + " ]";
+    }
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
     
 }

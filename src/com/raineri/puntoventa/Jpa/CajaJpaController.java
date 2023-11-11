@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author exera
+ * @author ADMIN
  */
 public class CajaJpaController implements Serializable {
 
@@ -31,11 +31,10 @@ public class CajaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-         public CajaJpaController() {
+    public CajaJpaController() {
         emf = Persistence.createEntityManagerFactory("PuntoVenta-JavaFXPU");
     }
 
-    
     public void create(Caja caja) {
         EntityManager em = null;
         try {
@@ -139,5 +138,5 @@ public class CajaJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

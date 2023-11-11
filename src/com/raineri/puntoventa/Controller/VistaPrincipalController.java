@@ -54,8 +54,10 @@ public class VistaPrincipalController implements Initializable {
     @FXML
     private Button btnProveedor;
 
-    
     private Scene scene;
+    @FXML
+    private Button btnCaja;
+
     /**
      * Initializes the controller class.
      */
@@ -151,6 +153,17 @@ public class VistaPrincipalController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @FXML
+    private void actionCaja(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../View/panelCaja.fxml"));
+            bp.setCenter(root);
+        } catch (IOException ex) {
+            Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

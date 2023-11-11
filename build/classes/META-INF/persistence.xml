@@ -9,6 +9,7 @@
     <class>com.raineri.puntoventa.Entity.ProductoProveedor</class>
     <class>com.raineri.puntoventa.Entity.Proveedor</class>
     <class>com.raineri.puntoventa.Entity.Cliente</class>
+    <class>com.raineri.puntoventa.Entity.Caja</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/puntoventa?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
