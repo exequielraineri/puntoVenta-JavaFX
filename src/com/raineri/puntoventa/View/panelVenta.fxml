@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -22,7 +27,7 @@
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="800.0" styleClass="shadow" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
                <children>
                   <Label prefHeight="35.0" prefWidth="868.0" text="Nueva Venta">
                      <font>
@@ -32,21 +37,52 @@
                   <Separator prefHeight="0.0" prefWidth="712.0" />
                   <HBox alignment="CENTER" prefHeight="60.0" prefWidth="800.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="txtBusqueda" prefHeight="26.0" prefWidth="293.0" promptText="Buscar Producto" styleClass="bordeTxt" />
-                        <ComboBox fx:id="comboBoxFiltrado" prefHeight="26.0" prefWidth="395.0" promptText="..." styleClass="bordeTxt">
+                        <TextField fx:id="txtCliente" prefHeight="26.0" prefWidth="293.0" promptText="Buscar Cliente">
+                           <styleClass>
+                              <String fx:value="bordeTxt" />
+                              <String fx:value="txtFocus" />
+                           </styleClass>
+                        </TextField>
+                        <ComboBox fx:id="comboBoxClientes" prefHeight="26.0" prefWidth="395.0" promptText="Seleccione uno...">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
+                           <styleClass>
+                              <String fx:value="bordeTxt" />
+                              <String fx:value="txtFocus" />
+                           </styleClass>
                         </ComboBox>
                      </children>
                      <VBox.margin>
-                        <Insets top="30.0" />
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Separator prefHeight="0.0" prefWidth="712.0" />
+                  <HBox alignment="CENTER" prefHeight="60.0" prefWidth="800.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="txtBusqueda" prefHeight="26.0" prefWidth="293.0" promptText="Buscar Producto">
+                           <styleClass>
+                              <String fx:value="bordeTxt" />
+                              <String fx:value="txtFocus" />
+                           </styleClass></TextField>
+                        <ComboBox fx:id="comboBoxFiltrado" prefHeight="26.0" prefWidth="395.0" promptText="Seleccione uno...">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <styleClass>
+                              <String fx:value="bordeTxt" />
+                              <String fx:value="txtFocus" />
+                           </styleClass>
+                        </ComboBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
                      </VBox.margin>
                   </HBox>
                   <Separator prefHeight="0.0" prefWidth="712.0" />
                   <AnchorPane prefHeight="20.0" prefWidth="745.0">
                      <children>
-                        <GridPane alignment="CENTER" hgap="10.0" layoutY="23.0" prefHeight="49.0" prefWidth="745.0" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="23.0">
+                        <GridPane alignment="CENTER" hgap="10.0" layoutY="23.0" prefHeight="49.0" prefWidth="745.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
                             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="322.0" minWidth="10.0" prefWidth="322.0" />
                             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="103.0" />
@@ -62,20 +98,31 @@
                               <Label text="Descripción" />
                               <TextField fx:id="txtDescripcion" editable="false" prefHeight="25.0" prefWidth="293.0" styleClass="fondotxt" GridPane.rowIndex="1" />
                               <Label text="Cantidad" GridPane.columnIndex="1" />
-                              <TextField fx:id="txtCantidad" prefHeight="26.0" prefWidth="95.0" promptText="Ej: 5" styleClass="bordeTxt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtCantidad" prefHeight="26.0" prefWidth="95.0" promptText="Ej: 5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="bordeTxt" />
+                                    <String fx:value="txtFocus" />
+                                 </styleClass></TextField>
                               <Label text="Precio U." GridPane.columnIndex="2" />
                               <TextField fx:id="txtPrecio" editable="false" prefHeight="25.0" prefWidth="95.0" styleClass="fondotxt" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <Label text="Stock" GridPane.columnIndex="3" />
                               <TextField fx:id="txtStock" editable="false" prefHeight="25.0" prefWidth="62.0" styleClass="fondotxt" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <Button mnemonicParsing="false" onAction="#AgregarDetalle" prefHeight="25.0" prefWidth="105.0" styleClass="botonDefault" text="Agregar" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                              <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#AgregarDetalle" prefHeight="25.0" prefWidth="105.0" text="Agregar" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                 <styleClass>
+                                    <String fx:value="botonDefault" />
+                                    <String fx:value="btnAgregar" />
+                                 </styleClass>
+                                 <graphic>
+                                    <FontAwesomeIcon fill="WHITE" iconName="PLUS" />
+                                 </graphic></Button>
                            </children>
                         </GridPane>
-                        <Separator layoutX="14.0" layoutY="92.0" prefHeight="3.0" prefWidth="731.0" />
+                        <Separator layoutX="14.0" layoutY="92.0" prefHeight="3.0" prefWidth="731.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="332.0" prefWidth="760.0">
+                  <AnchorPane prefHeight="332.0" prefWidth="760.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <TableView fx:id="tablaDetalle" prefHeight="232.0" prefWidth="760.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="tablaDetalle" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columns>
                               <TableColumn fx:id="col_id" maxWidth="50.0" prefWidth="50.0" text="#" />
                               <TableColumn fx:id="col_codigo" maxWidth="80.0" prefWidth="70.0" text="Codigo" />
@@ -89,39 +136,91 @@
                   </AnchorPane>
                   <AnchorPane>
                      <children>
-                        <GridPane layoutY="5.0" prefHeight="35.0" prefWidth="745.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <GridPane hgap="10.0" layoutY="5.0" prefHeight="35.0" prefWidth="745.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="497.0" minWidth="10.0" prefWidth="497.0" />
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="243.0" minWidth="0.0" prefWidth="0.0" />
-                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="497.0" minWidth="10.0" prefWidth="174.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="80.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="0.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="80.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="547.0" minWidth="0.0" prefWidth="80.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="162.0" minWidth="0.0" prefWidth="160.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button mnemonicParsing="false" onAction="#EliminarDetalleSeleccionado" prefHeight="25.0" prefWidth="72.0" styleClass="btneliminar" text="Eliminar" />
-                              <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="105.0" text="Total:" GridPane.columnIndex="1">
+                              <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#EliminarDetalleSeleccionado" prefHeight="28.0" prefWidth="103.0" styleClass="btneliminar" text="Eliminar">
+                                 <graphic>
+                                    <FontAwesomeIcon fill="RED" iconName="TRASH_ALT" size="1.5em" styleClass="iconEliminar" />
+                                 </graphic>
+                              </Button>
+                              <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="105.0" text="Total:" GridPane.columnIndex="5">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="txtTotal" editable="false" prefHeight="25.0" prefWidth="157.0" styleClass="bordeTxt" GridPane.columnIndex="2" />
+                              <TextField fx:id="txtTotal" editable="false" prefHeight="25.0" prefWidth="157.0" styleClass="bordeTxt" GridPane.columnIndex="6" />
+                              <Label text="Iva %:" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Subtotal:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                              <TextField fx:id="lblSubtotal" editable="false" styleClass="bordeTxt" GridPane.columnIndex="2" />
+                              <ComboBox fx:id="comboIva" prefWidth="150.0" promptText="Seleccione..." GridPane.columnIndex="4">
+                                 <styleClass>
+                                    <String fx:value="bordeTxt" />
+                                    <String fx:value="txtFocus" />
+                                 </styleClass>
+                              </ComboBox>
                            </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
+                  <Accordion prefHeight="81.0" prefWidth="745.0">
+                    <panes>
+                      <TitledPane alignment="TOP_LEFT" contentDisplay="CENTER" text="Metodo Pago">
+                        <content>
+                              <VBox spacing="5.0">
+                                 <children>
+                                    <RadioButton fx:id="RB_efectivo" mnemonicParsing="false" selected="true" text="Efectivo">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="pago" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="RB_transferencia" mnemonicParsing="false" text="Transferencia" toggleGroup="$pago" />
+                                    <RadioButton fx:id="RB_cheque" mnemonicParsing="false" text="Cheque" toggleGroup="$pago" />
+                                 </children>
+                              </VBox>
+                        </content>
+                      </TitledPane>
+                    </panes>
+                  </Accordion>
                   <Separator prefHeight="0.0" prefWidth="712.0" />
                   <AnchorPane>
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="745.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button layoutX="621.0" layoutY="1.0" mnemonicParsing="false" onAction="#RealizarVenta" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #84b6f4; -fx-text-fill: fff;" text="Confirmar Venta" AnchorPane.rightAnchor="14.0">
+                              <Button alignment="CENTER" contentDisplay="RIGHT" layoutX="621.0" layoutY="1.0" mnemonicParsing="false" onAction="#RealizarVenta" text="Confirmar Venta" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0">
                                  <styleClass>
                                     <String fx:value="botonDefault" />
                                     <String fx:value="confirmarVenta" />
                                  </styleClass>
+                                 <padding>
+                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <FontAwesomeIcon iconName="CHECK" selectionEnd="0" size="2em" stroke="BLACK" />
+                                 </graphic>
                               </Button>
-                              <Button layoutX="487.0" layoutY="1.0" mnemonicParsing="false" onAction="#LimpiarCampos" prefHeight="35.0" prefWidth="110.0" styleClass="botonDefault" text="Nueva Venta" AnchorPane.rightAnchor="148.0" />
+                              <Button alignment="CENTER" contentDisplay="RIGHT" layoutX="416.0" mnemonicParsing="false" onAction="#LimpiarCampos" prefHeight="46.0" prefWidth="155.0" styleClass="btnBlancoBordeAzul" text="Nueva Venta" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="174.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <FontAwesomeIcon fill="#002aff" iconName="FILE_ALT" size="2em" />
+                                 </graphic></Button>
                            </children>
                         </AnchorPane>
                      </children>

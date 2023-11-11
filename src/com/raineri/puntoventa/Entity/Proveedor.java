@@ -5,6 +5,7 @@
 package com.raineri.puntoventa.Entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -36,6 +37,9 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Proveedor.findByFechaRegistro", query = "SELECT p FROM Proveedor p WHERE p.fechaRegistro = :fechaRegistro")})
 public class Proveedor implements Serializable {
 
+    @OneToMany(mappedBy = "proveedor")
+    private List<Producto> productoList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,8 +57,6 @@ public class Proveedor implements Serializable {
     @Column(name = "fechaRegistro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRegistro;
-    @OneToMany(mappedBy = "idProveedor")
-    private List<ProductoProveedor> productoProveedorList;
 
     public Proveedor() {
     }
@@ -111,13 +113,6 @@ public class Proveedor implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public List<ProductoProveedor> getProductoProveedorList() {
-        return productoProveedorList;
-    }
-
-    public void setProductoProveedorList(List<ProductoProveedor> productoProveedorList) {
-        this.productoProveedorList = productoProveedorList;
-    }
 
     @Override
     public int hashCode() {
@@ -141,7 +136,16 @@ public class Proveedor implements Serializable {
 
     @Override
     public String toString() {
-        return "com.raineri.puntoventa.Entity.Proveedor[ id=" + id + " ]";
+        return String.format("%s",nombre);
+        //return "com.raineri.puntoventa.Entity.Proveedor[ id=" + id + " ]";
+    }
+
+    public List<Producto> getProductoList() {
+        return productoList;
+    }
+
+    public void setProductoList(List<Producto> productoList) {
+        this.productoList = productoList;
     }
     
 }

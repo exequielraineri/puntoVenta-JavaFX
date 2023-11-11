@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -37,6 +39,17 @@ import javax.persistence.Transient;
     @NamedQuery(name = "FacturaCabezera.findByEstado", query = "SELECT f FROM FacturaCabezera f WHERE f.estado = :estado")})
 public class FacturaCabezera implements Serializable {
 
+    @JoinColumn(name = "idCliente", referencedColumnName = "id")
+    @ManyToOne
+    private Cliente idCliente;
+
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "iva")
+    private Double iva;
+
+    @Column(name = "metodo_pago")
+    private String metodoPago;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +65,7 @@ public class FacturaCabezera implements Serializable {
     private Short estado;
     @OneToMany(mappedBy = "idFacCabezera")
     private List<FacturaDetalle> facturaDetalleList=new ArrayList<>();
-
+    
     @Transient
     private double total;
 
@@ -61,12 +74,14 @@ public class FacturaCabezera implements Serializable {
         for (FacturaDetalle detalle : facturaDetalleList) {
             total+=detalle.getSubtotal();
         }
+        total=(total*iva)/100+total;
         return total;
     }
 
     public void setTotal(double total) {
         this.total = total;
     }
+
     
     
     
@@ -145,6 +160,30 @@ public class FacturaCabezera implements Serializable {
     @Override
     public String toString() {
         return "com.raineri.puntoventa.Entity.FacturaCabezera[ id=" + id + " ]";
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    public Double getIva() {
+        return iva;
+    }
+
+    public void setIva(Double iva) {
+        this.iva = iva;
+    }
+
+    public Cliente getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Cliente idCliente) {
+        this.idCliente = idCliente;
     }
     
 }

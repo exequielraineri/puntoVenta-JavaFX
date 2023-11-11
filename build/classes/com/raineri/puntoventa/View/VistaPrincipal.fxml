@@ -12,7 +12,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raineri.puntoventa.Controller.VistaPrincipalController">
    <children>
       <AnchorPane>
@@ -95,7 +94,15 @@
                                           <Font name="Arial" size="12.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="btnReporte1" alignment="CENTER" mnemonicParsing="false" onAction="#actionProveedores" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Proveedores" textFill="WHITE">
+                                    <Button fx:id="btnProveedor" alignment="CENTER" mnemonicParsing="false" onAction="#actionProveedores" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Proveedores" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIcon fill="WHITE" iconName="USERS" size="1.5em" />
+                                       </graphic>
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnCliente" alignment="CENTER" mnemonicParsing="false" onAction="#actionCliente" prefHeight="40.0" prefWidth="200.0" styleClass="btn" text="Clientes" textFill="WHITE">
                                        <graphic>
                                           <FontAwesomeIcon fill="WHITE" iconName="USERS" size="1.5em" />
                                        </graphic>

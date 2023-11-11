@@ -52,20 +52,41 @@ public class PanelVerDetalleController implements Initializable {
     private TableColumn<FacturaDetalle, String> col_subtotal;
     @FXML
     private Label lblTotal;
-
+    @FXML
+    private Label lblNombreyApellido;
+    @FXML
+    private Label lblCuit;
+    @FXML
+    private Label lblDireccion;
+    
+    
+    
+    
     FacturaDetalleJpaController detalleDao = new FacturaDetalleJpaController();
     SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    DecimalFormat df=new DecimalFormat("###,###.00");
+    DecimalFormat df=new DecimalFormat("###,##0.00");
+    ObservableList<FacturaDetalle> detalle;
+    List<FacturaDetalle> lista_detalle;
+
+    
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        //Cargo los datos de la factura
         lblFechaYHora.setText("Fecha y Hora: "+sf.format(new Date()));
         lblNroFactura.setText("N° Factura: "+factura.getNroFactura());
         lblTotal.setText("Total: $ "+df.format(factura.getTotal()));
-
+        lblCuit.setText(factura.getIdCliente().getCuit());
+        lblNombreyApellido.setText(String.format("%s, %s", factura.getIdCliente().getApellido(),factura.getIdCliente().getNombre()));
+        lblDireccion.setText(factura.getIdCliente().getDomicilio());
+        
+        
+        //Asigno valores a las celdas
         col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
         col_codigo.setCellValueFactory((param) -> {
             return new SimpleObjectProperty<>(param.getValue().getIdProducto().getCodigo());
@@ -79,21 +100,27 @@ public class PanelVerDetalleController implements Initializable {
         });
 
         
+        //Asigno el ancho de cada celda
+        col_id.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(5)); // w * 1/5
+        col_cantidad.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(5)); // w * 1/5
+        col_codigo.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(5)); // w * 1/5
+        col_descripcion.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(5)); // w * 1/5
+        col_subtotal.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(5)); // w * 1/5
         
         cargarTabla();
     }
 
     private void cargarTabla() {
         tablaDetalle.getItems().clear();
-        ObservableList<FacturaDetalle> detalle = FXCollections.observableArrayList();
-        List<FacturaDetalle> lista_detalle = detalleDao.findFacturaDetalleEntities();
+        detalle = FXCollections.observableArrayList();
+        lista_detalle = detalleDao.findFacturaDetalleEntities();
 
         for (FacturaDetalle fd : lista_detalle) {
             if (fd.getIdFacCabezera().equals(factura)) {
                 detalle.add(fd);
-
             }
         }
+        
         tablaDetalle.setItems(detalle);
     }
 

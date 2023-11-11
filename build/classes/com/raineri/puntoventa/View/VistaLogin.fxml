@@ -24,15 +24,15 @@
                         <Font name="System Bold" size="26.0" />
                      </font>
                   </Label>
-                  <VBox minHeight="-Infinity" minWidth="-Infinity">
+                  <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity">
                      <children>
-                        <Label text="Usuario" />
+                        <Label prefHeight="17.0" prefWidth="333.0" text="Usuario" />
                         <TextField fx:id="txtUsuario" prefHeight="30.0" promptText="Ingrese su usuario" styleClass="txtUsuario">
                            <VBox.margin>
                               <Insets bottom="20.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Contraseña" />
+                        <Label prefHeight="17.0" prefWidth="336.0" text="Contraseña" />
                         <PasswordField fx:id="txtPassword" prefHeight="30.0" prefWidth="300.0" promptText="Ingrese su contraseña" styleClass="txtPassword">
                            <VBox.margin>
                               <Insets bottom="20.0" top="5.0" />

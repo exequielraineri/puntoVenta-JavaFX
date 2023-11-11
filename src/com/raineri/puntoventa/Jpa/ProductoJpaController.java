@@ -9,12 +9,12 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import com.raineri.puntoventa.Entity.Proveedor;
 import com.raineri.puntoventa.Entity.FacturaDetalle;
 import com.raineri.puntoventa.Entity.Producto;
+import com.raineri.puntoventa.Jpa.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
 import java.util.List;
-import com.raineri.puntoventa.Entity.ProductoProveedor;
-import com.raineri.puntoventa.Jpa.exceptions.NonexistentEntityException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -34,34 +34,36 @@ public class ProductoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    
     public ProductoJpaController() {
         emf = Persistence.createEntityManagerFactory("PuntoVenta-JavaFXPU");
     }
 
+    
     public void create(Producto producto) {
         if (producto.getFacturaDetalleList() == null) {
             producto.setFacturaDetalleList(new ArrayList<FacturaDetalle>());
-        }
-        if (producto.getProductoProveedorList() == null) {
-            producto.setProductoProveedorList(new ArrayList<ProductoProveedor>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Proveedor proveedor = producto.getProveedor();
+            if (proveedor != null) {
+                proveedor = em.getReference(proveedor.getClass(), proveedor.getId());
+                producto.setProveedor(proveedor);
+            }
             List<FacturaDetalle> attachedFacturaDetalleList = new ArrayList<FacturaDetalle>();
             for (FacturaDetalle facturaDetalleListFacturaDetalleToAttach : producto.getFacturaDetalleList()) {
                 facturaDetalleListFacturaDetalleToAttach = em.getReference(facturaDetalleListFacturaDetalleToAttach.getClass(), facturaDetalleListFacturaDetalleToAttach.getId());
                 attachedFacturaDetalleList.add(facturaDetalleListFacturaDetalleToAttach);
             }
             producto.setFacturaDetalleList(attachedFacturaDetalleList);
-            List<ProductoProveedor> attachedProductoProveedorList = new ArrayList<ProductoProveedor>();
-            for (ProductoProveedor productoProveedorListProductoProveedorToAttach : producto.getProductoProveedorList()) {
-                productoProveedorListProductoProveedorToAttach = em.getReference(productoProveedorListProductoProveedorToAttach.getClass(), productoProveedorListProductoProveedorToAttach.getId());
-                attachedProductoProveedorList.add(productoProveedorListProductoProveedorToAttach);
-            }
-            producto.setProductoProveedorList(attachedProductoProveedorList);
             em.persist(producto);
+            if (proveedor != null) {
+                proveedor.getProductoList().add(producto);
+                proveedor = em.merge(proveedor);
+            }
             for (FacturaDetalle facturaDetalleListFacturaDetalle : producto.getFacturaDetalleList()) {
                 Producto oldIdProductoOfFacturaDetalleListFacturaDetalle = facturaDetalleListFacturaDetalle.getIdProducto();
                 facturaDetalleListFacturaDetalle.setIdProducto(producto);
@@ -69,15 +71,6 @@ public class ProductoJpaController implements Serializable {
                 if (oldIdProductoOfFacturaDetalleListFacturaDetalle != null) {
                     oldIdProductoOfFacturaDetalleListFacturaDetalle.getFacturaDetalleList().remove(facturaDetalleListFacturaDetalle);
                     oldIdProductoOfFacturaDetalleListFacturaDetalle = em.merge(oldIdProductoOfFacturaDetalleListFacturaDetalle);
-                }
-            }
-            for (ProductoProveedor productoProveedorListProductoProveedor : producto.getProductoProveedorList()) {
-                Producto oldIdProductoOfProductoProveedorListProductoProveedor = productoProveedorListProductoProveedor.getIdProducto();
-                productoProveedorListProductoProveedor.setIdProducto(producto);
-                productoProveedorListProductoProveedor = em.merge(productoProveedorListProductoProveedor);
-                if (oldIdProductoOfProductoProveedorListProductoProveedor != null) {
-                    oldIdProductoOfProductoProveedorListProductoProveedor.getProductoProveedorList().remove(productoProveedorListProductoProveedor);
-                    oldIdProductoOfProductoProveedorListProductoProveedor = em.merge(oldIdProductoOfProductoProveedorListProductoProveedor);
                 }
             }
             em.getTransaction().commit();
@@ -94,10 +87,14 @@ public class ProductoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Producto persistentProducto = em.find(Producto.class, producto.getId());
+            Proveedor proveedorOld = persistentProducto.getProveedor();
+            Proveedor proveedorNew = producto.getProveedor();
             List<FacturaDetalle> facturaDetalleListOld = persistentProducto.getFacturaDetalleList();
             List<FacturaDetalle> facturaDetalleListNew = producto.getFacturaDetalleList();
-            List<ProductoProveedor> productoProveedorListOld = persistentProducto.getProductoProveedorList();
-            List<ProductoProveedor> productoProveedorListNew = producto.getProductoProveedorList();
+            if (proveedorNew != null) {
+                proveedorNew = em.getReference(proveedorNew.getClass(), proveedorNew.getId());
+                producto.setProveedor(proveedorNew);
+            }
             List<FacturaDetalle> attachedFacturaDetalleListNew = new ArrayList<FacturaDetalle>();
             for (FacturaDetalle facturaDetalleListNewFacturaDetalleToAttach : facturaDetalleListNew) {
                 facturaDetalleListNewFacturaDetalleToAttach = em.getReference(facturaDetalleListNewFacturaDetalleToAttach.getClass(), facturaDetalleListNewFacturaDetalleToAttach.getId());
@@ -105,14 +102,15 @@ public class ProductoJpaController implements Serializable {
             }
             facturaDetalleListNew = attachedFacturaDetalleListNew;
             producto.setFacturaDetalleList(facturaDetalleListNew);
-            List<ProductoProveedor> attachedProductoProveedorListNew = new ArrayList<ProductoProveedor>();
-            for (ProductoProveedor productoProveedorListNewProductoProveedorToAttach : productoProveedorListNew) {
-                productoProveedorListNewProductoProveedorToAttach = em.getReference(productoProveedorListNewProductoProveedorToAttach.getClass(), productoProveedorListNewProductoProveedorToAttach.getId());
-                attachedProductoProveedorListNew.add(productoProveedorListNewProductoProveedorToAttach);
-            }
-            productoProveedorListNew = attachedProductoProveedorListNew;
-            producto.setProductoProveedorList(productoProveedorListNew);
             producto = em.merge(producto);
+            if (proveedorOld != null && !proveedorOld.equals(proveedorNew)) {
+                proveedorOld.getProductoList().remove(producto);
+                proveedorOld = em.merge(proveedorOld);
+            }
+            if (proveedorNew != null && !proveedorNew.equals(proveedorOld)) {
+                proveedorNew.getProductoList().add(producto);
+                proveedorNew = em.merge(proveedorNew);
+            }
             for (FacturaDetalle facturaDetalleListOldFacturaDetalle : facturaDetalleListOld) {
                 if (!facturaDetalleListNew.contains(facturaDetalleListOldFacturaDetalle)) {
                     facturaDetalleListOldFacturaDetalle.setIdProducto(null);
@@ -127,23 +125,6 @@ public class ProductoJpaController implements Serializable {
                     if (oldIdProductoOfFacturaDetalleListNewFacturaDetalle != null && !oldIdProductoOfFacturaDetalleListNewFacturaDetalle.equals(producto)) {
                         oldIdProductoOfFacturaDetalleListNewFacturaDetalle.getFacturaDetalleList().remove(facturaDetalleListNewFacturaDetalle);
                         oldIdProductoOfFacturaDetalleListNewFacturaDetalle = em.merge(oldIdProductoOfFacturaDetalleListNewFacturaDetalle);
-                    }
-                }
-            }
-            for (ProductoProveedor productoProveedorListOldProductoProveedor : productoProveedorListOld) {
-                if (!productoProveedorListNew.contains(productoProveedorListOldProductoProveedor)) {
-                    productoProveedorListOldProductoProveedor.setIdProducto(null);
-                    productoProveedorListOldProductoProveedor = em.merge(productoProveedorListOldProductoProveedor);
-                }
-            }
-            for (ProductoProveedor productoProveedorListNewProductoProveedor : productoProveedorListNew) {
-                if (!productoProveedorListOld.contains(productoProveedorListNewProductoProveedor)) {
-                    Producto oldIdProductoOfProductoProveedorListNewProductoProveedor = productoProveedorListNewProductoProveedor.getIdProducto();
-                    productoProveedorListNewProductoProveedor.setIdProducto(producto);
-                    productoProveedorListNewProductoProveedor = em.merge(productoProveedorListNewProductoProveedor);
-                    if (oldIdProductoOfProductoProveedorListNewProductoProveedor != null && !oldIdProductoOfProductoProveedorListNewProductoProveedor.equals(producto)) {
-                        oldIdProductoOfProductoProveedorListNewProductoProveedor.getProductoProveedorList().remove(productoProveedorListNewProductoProveedor);
-                        oldIdProductoOfProductoProveedorListNewProductoProveedor = em.merge(oldIdProductoOfProductoProveedorListNewProductoProveedor);
                     }
                 }
             }
@@ -176,15 +157,15 @@ public class ProductoJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
             }
+            Proveedor proveedor = producto.getProveedor();
+            if (proveedor != null) {
+                proveedor.getProductoList().remove(producto);
+                proveedor = em.merge(proveedor);
+            }
             List<FacturaDetalle> facturaDetalleList = producto.getFacturaDetalleList();
             for (FacturaDetalle facturaDetalleListFacturaDetalle : facturaDetalleList) {
                 facturaDetalleListFacturaDetalle.setIdProducto(null);
                 facturaDetalleListFacturaDetalle = em.merge(facturaDetalleListFacturaDetalle);
-            }
-            List<ProductoProveedor> productoProveedorList = producto.getProductoProveedorList();
-            for (ProductoProveedor productoProveedorListProductoProveedor : productoProveedorList) {
-                productoProveedorListProductoProveedor.setIdProducto(null);
-                productoProveedorListProductoProveedor = em.merge(productoProveedorListProductoProveedor);
             }
             em.remove(producto);
             em.getTransaction().commit();
@@ -240,7 +221,8 @@ public class ProductoJpaController implements Serializable {
             em.close();
         }
     }
-
+    
+    
     public List<Producto> findProducto(String busqueda) {
         EntityManager em = getEntityManager();
         try {
@@ -254,4 +236,41 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
+    public List<Producto> findProductoEntitiesMenorStock() {
+        EntityManager em = getEntityManager();
+        try {
+            Query sql = em.createQuery("SELECT p FROM Producto p WHERE p.stock<20 ORDER BY P.stock ASC");
+            return sql.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Producto> findProductoEntitiesProveedor(Proveedor proveedor, String busqueda) {
+        EntityManager em = getEntityManager();
+        try {
+            Query sql = em.createQuery("SELECT p FROM Producto p WHERE p.proveedor=:proveedor AND p.descripcion LIKE :busqueda OR p.codigo=:codigo");
+            sql.setParameter("proveedor", proveedor);
+            sql.setParameter("busqueda", "%"+busqueda+"%");
+            sql.setParameter("codigo", "%"+busqueda+"%");
+            return sql.getResultList();
+        } finally {
+            em.close();
+        }
+
+    }
+
+    public List<Producto> findProductoConProveedor(Proveedor proveedor) {
+        EntityManager em = getEntityManager();
+        try {
+            Query sql = em.createQuery("SELECT p FROM Producto p WHERE p.proveedor=:proveedor");
+            sql.setParameter("proveedor", proveedor);
+            return sql.getResultList();
+        } finally {
+            em.close();
+        }
+
+    }
+
+    
 }

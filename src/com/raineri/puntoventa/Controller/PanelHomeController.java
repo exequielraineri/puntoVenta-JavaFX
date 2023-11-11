@@ -5,17 +5,21 @@
 package com.raineri.puntoventa.Controller;
 
 import com.raineri.puntoventa.Entity.FacturaCabezera;
+import com.raineri.puntoventa.Entity.Producto;
 import com.raineri.puntoventa.Jpa.FacturaCabezeraJpaController;
 import com.raineri.puntoventa.Jpa.ProductoJpaController;
 import com.raineri.puntoventa.Jpa.ProveedorJpaController;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 
 /**
  * FXML Controller class
@@ -36,6 +40,16 @@ public class PanelHomeController implements Initializable {
     FacturaCabezeraJpaController ventaDao;
     @FXML
     private LineChart lineChart;
+    @FXML
+    private BarChart<?, ?> chartProductoSinStock;
+    @FXML
+    private Label lblCantEfectivo;
+    @FXML
+    private Label lblCantTransferencia;
+    @FXML
+    private Label lblCantCheques;
+    @FXML
+    private ScrollPane scrollPane;
 
     /**
      * Initializes the controller class.
@@ -48,9 +62,13 @@ public class PanelHomeController implements Initializable {
         ventaDao = new FacturaCabezeraJpaController();
         lblCantProductos.setText(String.valueOf(productoDao.getProductoCount()));
         lblCantProveedores.setText(String.valueOf(proveedorDao.getProveedorCount()));
-        lblCantVentas.setText(String.valueOf(ventaDao.getFacturaCabezeraCount()));
+        lblCantVentas.setText(String.valueOf(ventaDao.getFacturaCabezeraCountFecha(Calendar.getInstance())));
+        lblCantTransferencia.setText(String.valueOf(ventaDao.getFacturaCabezeraCount("Transferencia")));
+        lblCantEfectivo.setText(String.valueOf(ventaDao.getFacturaCabezeraCount("Efectivo")));
+        lblCantCheques.setText(String.valueOf(ventaDao.getFacturaCabezeraCount("Cheque")));
 
         cargarAreaChart();
+        cargarCharProductoSinStock();
 
     }
 
@@ -107,7 +125,21 @@ public class PanelHomeController implements Initializable {
 
         series.getData().addAll(enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre);
         lineChart.getData().add(series);
-        
+
+    }
+
+    private void cargarCharProductoSinStock() {
+        XYChart.Series serie = new XYChart.Series();
+        serie.setName("Stock");
+        productoDao = new ProductoJpaController();
+        List<Producto> productos = productoDao.findProductoEntitiesMenorStock();
+        Producto p;
+        for (int i = 0; i < productos.size() && i != 5; i++) {
+            p = productos.get(i);
+            serie.getData().add(new XYChart.Data<>(p.getDescripcion(), p.getStock()));
+        }
+        chartProductoSinStock.getData().add(serie);
+
     }
 
 }

@@ -11,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -22,11 +20,14 @@ import javax.persistence.Table;
  * @author exera
  */
 @Entity
-@Table(name = "producto_proveedor")
+@Table(name = "caja")
 @NamedQueries({
-    @NamedQuery(name = "ProductoProveedor.findAll", query = "SELECT p FROM ProductoProveedor p"),
-    @NamedQuery(name = "ProductoProveedor.findById", query = "SELECT p FROM ProductoProveedor p WHERE p.id = :id")})
-public class ProductoProveedor implements Serializable {
+    @NamedQuery(name = "Caja.findAll", query = "SELECT c FROM Caja c"),
+    @NamedQuery(name = "Caja.findById", query = "SELECT c FROM Caja c WHERE c.id = :id"),
+    @NamedQuery(name = "Caja.findByDescripcion", query = "SELECT c FROM Caja c WHERE c.descripcion = :descripcion"),
+    @NamedQuery(name = "Caja.findByImporte", query = "SELECT c FROM Caja c WHERE c.importe = :importe"),
+    @NamedQuery(name = "Caja.findByTipo", query = "SELECT c FROM Caja c WHERE c.tipo = :tipo")})
+public class Caja implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -34,17 +35,18 @@ public class ProductoProveedor implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "id_producto", referencedColumnName = "id")
-    @ManyToOne
-    private Producto idProducto;
-    @JoinColumn(name = "id_proveedor", referencedColumnName = "id")
-    @ManyToOne
-    private Proveedor idProveedor;
+    @Column(name = "descripcion")
+    private String descripcion;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "importe")
+    private Double importe;
+    @Column(name = "tipo")
+    private String tipo;
 
-    public ProductoProveedor() {
+    public Caja() {
     }
 
-    public ProductoProveedor(Integer id) {
+    public Caja(Integer id) {
         this.id = id;
     }
 
@@ -56,20 +58,28 @@ public class ProductoProveedor implements Serializable {
         this.id = id;
     }
 
-    public Producto getIdProducto() {
-        return idProducto;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setIdProducto(Producto idProducto) {
-        this.idProducto = idProducto;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public Proveedor getIdProveedor() {
-        return idProveedor;
+    public Double getImporte() {
+        return importe;
     }
 
-    public void setIdProveedor(Proveedor idProveedor) {
-        this.idProveedor = idProveedor;
+    public void setImporte(Double importe) {
+        this.importe = importe;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     @Override
@@ -82,10 +92,10 @@ public class ProductoProveedor implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProductoProveedor)) {
+        if (!(object instanceof Caja)) {
             return false;
         }
-        ProductoProveedor other = (ProductoProveedor) object;
+        Caja other = (Caja) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -94,7 +104,7 @@ public class ProductoProveedor implements Serializable {
 
     @Override
     public String toString() {
-        return "com.raineri.puntoventa.Entity.ProductoProveedor[ id=" + id + " ]";
+        return "com.raineri.puntoventa.Entity.Caja[ id=" + id + " ]";
     }
     
 }

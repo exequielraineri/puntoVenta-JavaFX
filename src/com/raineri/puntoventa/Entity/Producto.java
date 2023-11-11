@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -35,8 +37,10 @@ import javax.persistence.Transient;
     @NamedQuery(name = "Producto.findByCodigo", query = "SELECT p FROM Producto p WHERE p.codigo = :codigo")})
 public class Producto implements Serializable {
 
-    @OneToMany(mappedBy = "idProducto")
-    private List<ProductoProveedor> productoProveedorList;
+    @JoinColumn(name = "proveedor", referencedColumnName = "id")
+    @ManyToOne
+    private Proveedor proveedor;
+
 
     @OneToMany(mappedBy = "idProducto")
     private List<FacturaDetalle> facturaDetalleList;
@@ -182,12 +186,11 @@ public class Producto implements Serializable {
         this.facturaDetalleList = facturaDetalleList;
     }
 
-    public List<ProductoProveedor> getProductoProveedorList() {
-        return productoProveedorList;
+    public Proveedor getProveedor() {
+        return proveedor;
     }
 
-    public void setProductoProveedorList(List<ProductoProveedor> productoProveedorList) {
-        this.productoProveedorList = productoProveedorList;
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
-
 }

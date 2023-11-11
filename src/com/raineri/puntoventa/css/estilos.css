@@ -97,9 +97,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .bordeTxt{
-    -fx-border-width: 0 0 1 0;
+    -fx-border-width: 1 1 1 1;
     -fx-border-color: #84b6f4;
     -fx-background-color: transparent;
+    -fx-border-radius: 5px;
 }
 
 .fondotxt{
@@ -117,7 +118,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 
 .degradadoRight {
-    -fx-background-color: linear-gradient(to right,  #5086c1, #84b6f4);
+    -fx-background-color: linear-gradient(to right,  #84b6f4, #5086c1);
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10px;
+}
+
+.degradadoRight:hover{
+    -fx-background-color: linear-gradient(to left,  #5086c1, #84b6f4);
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-background-radius: 10px;
@@ -126,39 +134,107 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .botonDefault{
     -fx-cursor: hand;
     -fx-background-radius: 10px;
-    -fx-border-color: #84b6f4;
-    -fx-background-color: transparent;
+    -fx-background-color: #2f67ff;
     -fx-border-radius: 10px;
-    -fx-text-fill: #84b6f4;
-    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+    -fx-text-fill: #fff;
+    -fx-border-width: 0 0 0 0; /* Arriba, Derecha, Abajo, Izquierda */
 }
 
 .botonDefault:hover{
     -fx-cursor: hand;
     -fx-background-radius: 10px;
-    -fx-border-color: #84b6f4;
-    -fx-background-color: #84b6f4;
+    -fx-background-color: #0c36ff;
     -fx-border-radius: 10px;
-    -fx-text-fill: white;
-    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+    -fx-text-fill: #f2f8fc;
+
+
 }
 
 .btneliminar{
     -fx-cursor: hand;
     -fx-background-radius: 10px;
-    -fx-border-color: red;
-    -fx-background-color: transparent;
+    -fx-border-color: #ff2323;
+    -fx-background-color: #ff2323;
     -fx-border-radius: 10px;
-    -fx-text-fill: red;
+    -fx-text-fill: #fff;
     -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
 }
 
 .btneliminar:hover{
     -fx-cursor: hand;
     -fx-background-radius: 10px;
-    -fx-border-color: #fff;
-    -fx-background-color: red;
+    -fx-border-color: #ff0000;
+    -fx-background-color: #ff0000;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #fff;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+.iconEliminar{
+    -fx-fill: #fff;
+}
+
+
+
+
+
+.confirmarVenta{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-background-color: #2f67ff;
     -fx-border-radius: 10px;
     -fx-text-fill: #fff;
     -fx-border-width: 0 0 0 0; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.confirmarVenta:hover{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-background-color: #0c36ff;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #fff;
+    -fx-border-width: 0 0 0 0; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+
+
+
+
+.nuevaVenta{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-background-color: #fff;
+    -fx-border-radius: 10px;
+    -fx-text-fill: black;
+}
+
+.nuevaVenta:hover{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-background-color: #e8f5ff;
+    -fx-border-radius: 10px;
+    -fx-text-fill: black;
+}
+
+.btnBlancoBordeAzul{
+    -fx-background-radius: 10px;
+    -fx-border-color: #002aff;
+    -fx-background-color: #fff;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #002aff;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.btnBlancoBordeAzul:hover{
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-color: #002aff;
+    -fx-background-color: #e8f5ff;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #002aff;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
+}
+
+.txtFocus:focused{
+    -fx-border-color: blue;
+    -fx-border-width: 1 1 1 1; /* Arriba, Derecha, Abajo, Izquierda */
 }

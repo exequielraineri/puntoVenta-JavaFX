@@ -4,6 +4,7 @@
  */
 package com.raineri.puntoventa.Controller;
 
+import com.raineri.puntoventa.util.Alerta;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,7 @@ import javafx.stage.Stage;
  * @author exera
  */
 public class VistaPrincipalController implements Initializable {
-    
+
     @FXML
     private BorderPane bp;
     @FXML
@@ -49,8 +50,12 @@ public class VistaPrincipalController implements Initializable {
     @FXML
     private Label txtFecha;
     @FXML
-    private Button btnReporte1;
+    private Button btnCliente;
+    @FXML
+    private Button btnProveedor;
 
+    
+    private Scene scene;
     /**
      * Initializes the controller class.
      */
@@ -67,17 +72,18 @@ public class VistaPrincipalController implements Initializable {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void actionHome(ActionEvent event) {
         try {
+
             Parent root = FXMLLoader.load(getClass().getResource("../View/panelHome.fxml"));
             bp.setCenter(root);
         } catch (IOException ex) {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void actionInventario(ActionEvent event) {
         try {
@@ -87,7 +93,7 @@ public class VistaPrincipalController implements Initializable {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void actionVenta(ActionEvent event) {
         try {
@@ -97,7 +103,7 @@ public class VistaPrincipalController implements Initializable {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void actionReporte(ActionEvent event) {
         try {
@@ -107,45 +113,44 @@ public class VistaPrincipalController implements Initializable {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void cerrarSesion(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmación");
-        alert.setHeaderText("Cierre de Sesion");
-        alert.setContentText("Desea cerrar la sesión?");
-        
-        ButtonType botonSi = new ButtonType("Si");
-        ButtonType botonNo = new ButtonType("No");
-        alert.getButtonTypes().setAll(botonSi, botonNo);
-        
-        Optional<ButtonType> showAndWait = alert.showAndWait();
-        if (showAndWait.get() == botonSi) {
-            
+        if (Alerta.mostrarAlertaConfirmation("Seguro desea cerrar sesion?")) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../View/VistaLogin.fxml"));
-                Scene scene = new Scene(root);
+                scene = new Scene(root);
                 this.btnHome.getScene().getWindow().hide();
                 Stage stage = new Stage();
                 stage.setScene(scene);
+                stage.setTitle("Inicio de Sesion");
                 stage.show();
             } catch (IOException ex) {
                 Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
-        
-        alert.close();
+
     }
 
     @FXML
     private void actionProveedores(ActionEvent event) {
-         try {
+        try {
             Parent root = FXMLLoader.load(getClass().getResource("../View/panelProveedores.fxml"));
             bp.setCenter(root);
         } catch (IOException ex) {
             Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @FXML
+    private void actionCliente(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../View/panelCliente.fxml"));
+            bp.setCenter(root);
+        } catch (IOException ex) {
+            Logger.getLogger(VistaPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

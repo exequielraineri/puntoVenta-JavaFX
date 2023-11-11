@@ -5,7 +5,9 @@
 package com.raineri.puntoventa.Controller;
 
 import com.raineri.puntoventa.Entity.Producto;
+import com.raineri.puntoventa.Entity.Proveedor;
 import com.raineri.puntoventa.Jpa.ProductoJpaController;
+import com.raineri.puntoventa.Jpa.ProveedorJpaController;
 import com.raineri.puntoventa.Jpa.exceptions.NonexistentEntityException;
 import com.raineri.puntoventa.util.Alerta;
 import java.io.IOException;
@@ -21,13 +23,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -65,7 +67,12 @@ public class PanelInventarioController implements Initializable {
     @FXML
     private Button btnNuevoProducto;
 
+    private ProveedorJpaController proveedorDao;
+
     Stage stage = new Stage();
+
+    @FXML
+    private ComboBox<Proveedor> comboProveedor;
 
     /**
      * Initializes the controller class.
@@ -79,7 +86,27 @@ public class PanelInventarioController implements Initializable {
         stock_producto.setCellValueFactory(new PropertyValueFactory<>("stock"));
         precio_producto.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
+        id_producto.prefWidthProperty().bind(tablaInventario.widthProperty().divide(5)); // w * 1/5
+        desc_producto.prefWidthProperty().bind(tablaInventario.widthProperty().divide(5)); // w * 1/5
+        codigo_producto.prefWidthProperty().bind(tablaInventario.widthProperty().divide(5)); // w * 1/5
+        stock_producto.prefWidthProperty().bind(tablaInventario.widthProperty().divide(5)); // w * 1/5
+        precio_producto.prefWidthProperty().bind(tablaInventario.widthProperty().divide(5)); // w * 1/5
+
         cargarTabla();
+        stage.setOnCloseRequest((event) -> {
+            productoModificar = null;
+            tablaInventario.getSelectionModel().clearSelection();
+        });
+        cargarComboProveedor();
+        comboProveedor.getSelectionModel().selectFirst();
+        
+        comboProveedor.setOnAction((event) -> {
+            if (comboProveedor.getSelectionModel().getSelectedItem().getId()==0) {
+                cargarTabla();
+            }else{
+                cargarTabla(comboProveedor.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
     @FXML
@@ -117,6 +144,7 @@ public class PanelInventarioController implements Initializable {
     private void nuevoProducto(ActionEvent event) {
         try {
             stage.close();
+
             Parent root = FXMLLoader.load(getClass().getResource("../View/PanelAgregarProducto.fxml"));
 
             Scene scene = new Scene(root);
@@ -128,8 +156,9 @@ public class PanelInventarioController implements Initializable {
                 cargarTabla();
             });
         } catch (IOException ex) {
-            Alerta.mostrarAlertaError("Hubo un error: " + ex.getMessage());
+            Logger.getLogger(PanelInventarioController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     public void cargarTabla() {
@@ -147,8 +176,14 @@ public class PanelInventarioController implements Initializable {
 
     @FXML
     private void FiltrarBusqueda(KeyEvent event) {
+        List<Producto> lista_productos = null;
+        productoDao=new ProductoJpaController();
+        if (comboProveedor.getSelectionModel().getSelectedItem().getId()==0) {
+            lista_productos = productoDao.findProducto(txtBuscar.getText());
+        } else {
+            lista_productos = productoDao.findProductoEntitiesProveedor(comboProveedor.getSelectionModel().getSelectedItem(),txtBuscar.getText());
+        }
         ObservableList<Producto> productos = FXCollections.observableArrayList();
-        List<Producto> lista_productos = productoDao.findProducto(txtBuscar.getText());
         for (Producto p : lista_productos) {
             productos.add(p);
         }
@@ -200,5 +235,34 @@ public class PanelInventarioController implements Initializable {
             Alerta.mostrarAlertaAdvertencia("Debe seleccionar un producto!");
         }
 
+    }
+
+    private void cargarComboProveedor() {
+        comboProveedor.getItems().clear();
+        proveedorDao = new ProveedorJpaController();
+        ObservableList<Proveedor> proveedorObs = FXCollections.observableArrayList();
+        List<Proveedor> proveedores = proveedorDao.findProveedorEntities();
+        for (Proveedor p : proveedores) {
+            proveedorObs.add(p);
+        }
+        Proveedor firstProveedor = new Proveedor();
+        firstProveedor.setNombre("Todos");
+        firstProveedor.setId(0);
+        firstProveedor.setCuit("0");
+        comboProveedor.getItems().add(firstProveedor);
+        comboProveedor.getItems().addAll(proveedorObs);
+    }
+
+    private void cargarTabla(Proveedor proveedor) {
+         tablaInventario.getItems().clear();
+        ObservableList<Producto> productos = FXCollections.observableArrayList();
+        productoDao=new ProductoJpaController();
+        //lista_productos = productoDao.findProductoEntities();
+        List<Producto> prods = productoDao.findProductoConProveedor(proveedor);
+        for (Producto p : prods) {//aqui marca el error
+            productos.add(p);
+        }
+
+        tablaInventario.setItems(productos);
     }
 }

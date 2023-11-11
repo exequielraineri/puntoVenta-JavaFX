@@ -19,11 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -32,16 +32,14 @@ import javafx.stage.Stage;
  * @author exera
  */
 public class VistaLoginController implements Initializable {
-
+    
     @FXML
     private TextField txtUsuario;
     @FXML
     private PasswordField txtPassword;
     @FXML
     private Button btnIniciar;
-    @FXML
-    private ImageView imagen;
-
+    
     public static Usuario usuario = new Usuario();
 
     /**
@@ -52,32 +50,35 @@ public class VistaLoginController implements Initializable {
         // TODO
 
     }
-
+    
     @FXML
     private void click(ActionEvent event) {
-
+        
         UsuarioJpaController uDao = new UsuarioJpaController();
         List<Usuario> usuarios = uDao.findUsuario(txtUsuario.getText(), txtPassword.getText());
         if (usuarios.isEmpty()) {
             Alerta.mostrarAlertaAdvertencia("Usuario o Contraseña incorrecta");
-
+            
         } else {
-
+            
             try {
+                
                 usuario = usuarios.get(0);
                 Parent root = FXMLLoader.load(getClass().getResource("../View/VistaPrincipal.fxml"));
                 Scene scene = new Scene(root);
-
+                
                 Stage stage = new Stage();
                 stage.setScene(scene);
+                stage.setTitle("Punto de Venta");
                 this.btnIniciar.getScene().getWindow().hide();
                 stage.show();
+                stage.setMinWidth(1100);
+                stage.setMinHeight(650);
             } catch (IOException ex) {
                 Alerta.mostrarAlertaAdvertencia("Hubo un error: " + ex.getMessage());
                 Logger.getLogger(VistaLoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        
     }
-
 }

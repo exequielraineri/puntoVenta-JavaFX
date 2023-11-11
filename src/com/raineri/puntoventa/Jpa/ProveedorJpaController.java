@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.raineri.puntoventa.Entity.ProductoProveedor;
+import com.raineri.puntoventa.Entity.Producto;
 import com.raineri.puntoventa.Entity.Proveedor;
 import com.raineri.puntoventa.Jpa.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
@@ -29,36 +29,37 @@ public class ProveedorJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
-    public ProveedorJpaController() {
-        emf = Persistence.createEntityManagerFactory("PuntoVenta-JavaFXPU");
-    }
-
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    
+    public ProveedorJpaController(){
+        emf = Persistence.createEntityManagerFactory("PuntoVenta-JavaFXPU");
+    }
+
     public void create(Proveedor proveedor) {
-        if (proveedor.getProductoProveedorList() == null) {
-            proveedor.setProductoProveedorList(new ArrayList<ProductoProveedor>());
+        if (proveedor.getProductoList() == null) {
+            proveedor.setProductoList(new ArrayList<Producto>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<ProductoProveedor> attachedProductoProveedorList = new ArrayList<ProductoProveedor>();
-            for (ProductoProveedor productoProveedorListProductoProveedorToAttach : proveedor.getProductoProveedorList()) {
-                productoProveedorListProductoProveedorToAttach = em.getReference(productoProveedorListProductoProveedorToAttach.getClass(), productoProveedorListProductoProveedorToAttach.getId());
-                attachedProductoProveedorList.add(productoProveedorListProductoProveedorToAttach);
+            List<Producto> attachedProductoList = new ArrayList<Producto>();
+            for (Producto productoListProductoToAttach : proveedor.getProductoList()) {
+                productoListProductoToAttach = em.getReference(productoListProductoToAttach.getClass(), productoListProductoToAttach.getId());
+                attachedProductoList.add(productoListProductoToAttach);
             }
-            proveedor.setProductoProveedorList(attachedProductoProveedorList);
+            proveedor.setProductoList(attachedProductoList);
             em.persist(proveedor);
-            for (ProductoProveedor productoProveedorListProductoProveedor : proveedor.getProductoProveedorList()) {
-                Proveedor oldIdProveedorOfProductoProveedorListProductoProveedor = productoProveedorListProductoProveedor.getIdProveedor();
-                productoProveedorListProductoProveedor.setIdProveedor(proveedor);
-                productoProveedorListProductoProveedor = em.merge(productoProveedorListProductoProveedor);
-                if (oldIdProveedorOfProductoProveedorListProductoProveedor != null) {
-                    oldIdProveedorOfProductoProveedorListProductoProveedor.getProductoProveedorList().remove(productoProveedorListProductoProveedor);
-                    oldIdProveedorOfProductoProveedorListProductoProveedor = em.merge(oldIdProveedorOfProductoProveedorListProductoProveedor);
+            for (Producto productoListProducto : proveedor.getProductoList()) {
+                Proveedor oldProveedorOfProductoListProducto = productoListProducto.getProveedor();
+                productoListProducto.setProveedor(proveedor);
+                productoListProducto = em.merge(productoListProducto);
+                if (oldProveedorOfProductoListProducto != null) {
+                    oldProveedorOfProductoListProducto.getProductoList().remove(productoListProducto);
+                    oldProveedorOfProductoListProducto = em.merge(oldProveedorOfProductoListProducto);
                 }
             }
             em.getTransaction().commit();
@@ -75,30 +76,30 @@ public class ProveedorJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Proveedor persistentProveedor = em.find(Proveedor.class, proveedor.getId());
-            List<ProductoProveedor> productoProveedorListOld = persistentProveedor.getProductoProveedorList();
-            List<ProductoProveedor> productoProveedorListNew = proveedor.getProductoProveedorList();
-            List<ProductoProveedor> attachedProductoProveedorListNew = new ArrayList<ProductoProveedor>();
-            for (ProductoProveedor productoProveedorListNewProductoProveedorToAttach : productoProveedorListNew) {
-                productoProveedorListNewProductoProveedorToAttach = em.getReference(productoProveedorListNewProductoProveedorToAttach.getClass(), productoProveedorListNewProductoProveedorToAttach.getId());
-                attachedProductoProveedorListNew.add(productoProveedorListNewProductoProveedorToAttach);
+            List<Producto> productoListOld = persistentProveedor.getProductoList();
+            List<Producto> productoListNew = proveedor.getProductoList();
+            List<Producto> attachedProductoListNew = new ArrayList<Producto>();
+            for (Producto productoListNewProductoToAttach : productoListNew) {
+                productoListNewProductoToAttach = em.getReference(productoListNewProductoToAttach.getClass(), productoListNewProductoToAttach.getId());
+                attachedProductoListNew.add(productoListNewProductoToAttach);
             }
-            productoProveedorListNew = attachedProductoProveedorListNew;
-            proveedor.setProductoProveedorList(productoProveedorListNew);
+            productoListNew = attachedProductoListNew;
+            proveedor.setProductoList(productoListNew);
             proveedor = em.merge(proveedor);
-            for (ProductoProveedor productoProveedorListOldProductoProveedor : productoProveedorListOld) {
-                if (!productoProveedorListNew.contains(productoProveedorListOldProductoProveedor)) {
-                    productoProveedorListOldProductoProveedor.setIdProveedor(null);
-                    productoProveedorListOldProductoProveedor = em.merge(productoProveedorListOldProductoProveedor);
+            for (Producto productoListOldProducto : productoListOld) {
+                if (!productoListNew.contains(productoListOldProducto)) {
+                    productoListOldProducto.setProveedor(null);
+                    productoListOldProducto = em.merge(productoListOldProducto);
                 }
             }
-            for (ProductoProveedor productoProveedorListNewProductoProveedor : productoProveedorListNew) {
-                if (!productoProveedorListOld.contains(productoProveedorListNewProductoProveedor)) {
-                    Proveedor oldIdProveedorOfProductoProveedorListNewProductoProveedor = productoProveedorListNewProductoProveedor.getIdProveedor();
-                    productoProveedorListNewProductoProveedor.setIdProveedor(proveedor);
-                    productoProveedorListNewProductoProveedor = em.merge(productoProveedorListNewProductoProveedor);
-                    if (oldIdProveedorOfProductoProveedorListNewProductoProveedor != null && !oldIdProveedorOfProductoProveedorListNewProductoProveedor.equals(proveedor)) {
-                        oldIdProveedorOfProductoProveedorListNewProductoProveedor.getProductoProveedorList().remove(productoProveedorListNewProductoProveedor);
-                        oldIdProveedorOfProductoProveedorListNewProductoProveedor = em.merge(oldIdProveedorOfProductoProveedorListNewProductoProveedor);
+            for (Producto productoListNewProducto : productoListNew) {
+                if (!productoListOld.contains(productoListNewProducto)) {
+                    Proveedor oldProveedorOfProductoListNewProducto = productoListNewProducto.getProveedor();
+                    productoListNewProducto.setProveedor(proveedor);
+                    productoListNewProducto = em.merge(productoListNewProducto);
+                    if (oldProveedorOfProductoListNewProducto != null && !oldProveedorOfProductoListNewProducto.equals(proveedor)) {
+                        oldProveedorOfProductoListNewProducto.getProductoList().remove(productoListNewProducto);
+                        oldProveedorOfProductoListNewProducto = em.merge(oldProveedorOfProductoListNewProducto);
                     }
                 }
             }
@@ -131,10 +132,10 @@ public class ProveedorJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The proveedor with id " + id + " no longer exists.", enfe);
             }
-            List<ProductoProveedor> productoProveedorList = proveedor.getProductoProveedorList();
-            for (ProductoProveedor productoProveedorListProductoProveedor : productoProveedorList) {
-                productoProveedorListProductoProveedor.setIdProveedor(null);
-                productoProveedorListProductoProveedor = em.merge(productoProveedorListProductoProveedor);
+            List<Producto> productoList = proveedor.getProductoList();
+            for (Producto productoListProducto : productoList) {
+                productoListProducto.setProveedor(null);
+                productoListProducto = em.merge(productoListProducto);
             }
             em.remove(proveedor);
             em.getTransaction().commit();
@@ -190,7 +191,7 @@ public class ProveedorJpaController implements Serializable {
             em.close();
         }
     }
-
+    
     public List<Proveedor> findProveedor(String busqueda) {
         EntityManager em = getEntityManager();
         try {

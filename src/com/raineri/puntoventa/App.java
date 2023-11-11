@@ -19,11 +19,12 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("View/VistaLogin.fxml"));
-
         Scene scene = new Scene(root);
-
+        stage.setResizable(false);
         stage.setScene(scene);
+        stage.setTitle("Inicio de Sesion");
         stage.show();
+
     }
 
     /**

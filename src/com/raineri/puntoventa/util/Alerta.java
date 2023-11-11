@@ -4,8 +4,10 @@
  */
 package com.raineri.puntoventa.util;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class Alerta {
 
@@ -28,4 +30,20 @@ public class Alerta {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
+    public static boolean mostrarAlertaConfirmation(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(mensaje);
+        ButtonType btnsi = new ButtonType("Si");
+        ButtonType btnno = new ButtonType("No");
+        alert.getButtonTypes().setAll(btnsi, btnno);
+        Optional<ButtonType> btn = alert.showAndWait();
+        if (btn.get() == btnsi) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 }

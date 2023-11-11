@@ -10,10 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="501.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="com.raineri.puntoventa.Controller.PanelVerDetalleController">
+<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="501.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raineri.puntoventa.Controller.PanelVerDetalleController">
    <children>
-      <VBox alignment="CENTER_LEFT" layoutX="157.0" layoutY="300.0" prefHeight="554.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER_LEFT" layoutX="157.0" layoutY="300.0" prefHeight="380.0" prefWidth="501.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator />
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -48,6 +47,40 @@
                   </VBox>
                </children>
             </HBox>
+            <AnchorPane prefHeight="81.0" prefWidth="401.0">
+               <children>
+                  <Label alignment="CENTER" text="Cliente:">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblNombreyApellido" layoutX="76.0" layoutY="2.0" prefHeight="17.0" prefWidth="307.0" text="Apellido y nombre">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" layoutY="22.0" text="Cuit:">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblCuit" layoutX="76.0" layoutY="25.0" prefHeight="17.0" prefWidth="307.0" text="cuit">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" layoutY="46.0" text="Dirección:">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblDireccion" layoutX="76.0" layoutY="48.0" prefHeight="17.0" prefWidth="307.0" text="dir">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
             <Separator prefWidth="200.0" />
             <TableView fx:id="tablaDetalle" prefHeight="199.0" prefWidth="401.0">
               <columns>

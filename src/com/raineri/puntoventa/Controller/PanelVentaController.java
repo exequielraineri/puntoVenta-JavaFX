@@ -49,7 +49,16 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.raineri.puntoventa.App;
+import com.raineri.puntoventa.Entity.Cliente;
+import com.raineri.puntoventa.Jpa.ClienteJpaController;
 import java.io.FileOutputStream;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -82,21 +91,41 @@ public class PanelVentaController implements Initializable {
     private TextField txtStock;
     @FXML
     private TextField txtTotal;
-
     @FXML
     private TextField txtBusqueda;
     @FXML
     private ComboBox<Producto> comboBoxFiltrado;
+    @FXML
+    private RadioButton RB_efectivo;
+    @FXML
+    private ToggleGroup pago;
+    @FXML
+    private RadioButton RB_transferencia;
+    @FXML
+    private RadioButton RB_cheque;
+    @FXML
+    private TextField lblSubtotal;
+    @FXML
+    private ComboBox<Double> comboIva;
+    @FXML
+    private TextField txtCliente;
+    @FXML
+    private ComboBox<Cliente> comboBoxClientes;
 
-    private List<Producto> productosComboBox = new ArrayList<>();
-    private ObservableList<Producto> productosDetalle = FXCollections.observableArrayList();
-    Producto p;
-    ObservableList<Producto> productosObserv;
-    Double total;
+    private List<Producto> productosLista = new ArrayList<>();
+    private ObservableList<Producto> productosDetalleObserv = FXCollections.observableArrayList();
+    private Producto producto;
+    private Cliente cliente;
+    private ObservableList<Producto> productosObserv;
+    private Double total;
+    private Double subtotal;
 
-    ProductoJpaController pDao;
-    FacturaCabezeraJpaController cabezeraDao;
-    FacturaDetalleJpaController detalleDao;
+    DecimalFormat df = new DecimalFormat("###,##0.00");
+
+    private ClienteJpaController clienteDao;
+    private ProductoJpaController productoDao;
+    private FacturaCabezeraJpaController facturaCabezeraDao;
+    private FacturaDetalleJpaController facturaDetalleDao;
 
     /**
      * Initializes the controller class.
@@ -105,30 +134,45 @@ public class PanelVentaController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         productosObserv = FXCollections.observableArrayList();
+        cargarComboBox();
+        cargarComboIva();
         txtBusqueda.setOnKeyPressed((event) -> {
-            productosComboBox = cargarTablaConFiltro(event);
-            productosObserv.setAll(productosComboBox);
+            productosLista = cargarTablaConFiltro(event);
+            productosObserv.setAll(productosLista);
 
             comboBoxFiltrado.setItems(productosObserv);
             comboBoxFiltrado.getSelectionModel().selectFirst();
         });
 
+        txtCliente.setOnKeyPressed((event) -> {
+            String text = txtCantidad.getText().concat(event.getText());
+            ObservableList<Cliente> clienteObserv = FXCollections.observableArrayList();
+            List<Cliente> clientesComboBox = cargarClientesConFiltro(text);
+            clienteObserv.setAll(clientesComboBox);
+
+            comboBoxClientes.setItems(clienteObserv);
+            comboBoxClientes.getSelectionModel().selectFirst();
+        });
+
+        txtCantidad.setDisable(true);
         comboBoxFiltrado.setOnAction((event) -> {
 
             if (comboBoxFiltrado.getSelectionModel().getSelectedItem() != null) {
-                p = comboBoxFiltrado.getSelectionModel().getSelectedItem();
-                txtDescripcion.setText(p.getDescripcion());
-                txtPrecio.setText(p.getPrecio().toString());
-                txtStock.setText(p.getStock().toString());
-
+                producto = comboBoxFiltrado.getSelectionModel().getSelectedItem();
+                txtDescripcion.setText(producto.getDescripcion());
+                txtPrecio.setText(df.format(producto.getPrecio().doubleValue()));
+                txtStock.setText(producto.getStock().toString());
+                txtCantidad.setDisable(false);
             } else {
                 txtDescripcion.setText(null);
                 txtPrecio.setText(null);
                 txtStock.setText(null);
+                txtCantidad.setDisable(true);
+                txtCantidad.setText(null);
             }
         });
 
-        //configuramos la tabla
+        //configuramos la tabla para ingresar los valores que tendra
         col_id.setCellValueFactory(new PropertyValueFactory<>("Id"));
         col_codigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         col_descripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
@@ -136,64 +180,122 @@ public class PanelVentaController implements Initializable {
         col_cantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         col_subtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
 
+        //asignamos el ancho de las celdas
+        col_id.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+        col_cantidad.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+        col_codigo.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+        col_descripcion.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+        col_precio.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+        col_subtotal.prefWidthProperty().bind(tablaDetalle.widthProperty().divide(6)); // w * 1/5
+
+        //formateamos la entrada que solo reciba enteros
+        TextFormatter formatoSoloEnteros = new TextFormatter<>(
+                (change) -> {
+                    String text = change.getControlNewText();
+
+                    for (int i = 0; i < text.length(); i++) {
+                        if (!text.matches("^\\d{1,}$")) {
+                            return null;
+                        }
+                        if ((text == "" ? Integer.parseInt("0") : Integer.parseInt(text)) <= 0) {
+                            return null;
+                        }
+                    }
+                    return change;
+
+                }
+        );
+
+        txtCantidad.setTextFormatter(formatoSoloEnteros);
+
+        //verificamos que la cantidad que digite sea menor al stock 
+        txtCantidad.setOnKeyReleased((event) -> {
+            int cant = txtCantidad.getText() == null ? 0 : Integer.parseInt(txtCantidad.getText());
+            if (cant > Integer.parseInt(txtStock.getText())) {
+                Alerta.mostrarAlertaAdvertencia("Supera el stock");
+                txtCantidad.setText(null);
+            }
+        });
+
+        comboIva.setOnAction((event) -> {
+            calcularTotal();
+        });
+
+        comboIva.getSelectionModel().selectFirst();
+    }
+
+    private void calcularTotal() {
+        if (comboIva.getSelectionModel().getSelectedItem() != null) {
+            switch (comboIva.getSelectionModel().getSelectedItem().toString()) {
+                case "10.5": {
+                    total = (subtotal * 10.5) / 100 + subtotal;
+                    break;
+                }
+                case "21.0": {
+                    total = (subtotal * 21.0) / 100 + subtotal;
+                    break;
+                }
+                default: {
+                    total = subtotal;
+                }
+            }
+            txtTotal.setText("$ " + df.format(total));
+        } else {
+            txtTotal.setText("$ " + df.format(subtotal));
+        }
     }
 
     @FXML
     private void AgregarDetalle(ActionEvent event) {
-        total = 0.0;
-        if (productosDetalle.contains(p)) {
+        subtotal = 0.0;
+        if (productosDetalleObserv.contains(producto)) {
 
-            for (int i = 0; i < productosDetalle.size(); i++) {
-                if (productosDetalle.get(i).getId().intValue() == p.getId().intValue()) {
+            for (int i = 0; i < productosDetalleObserv.size(); i++) {
+                if (productosDetalleObserv.get(i).getId().intValue() == producto.getId().intValue()) {
 
-                    productosDetalle.get(i).setCantidad(productosDetalle.get(i).getCantidad() + Integer.valueOf(txtCantidad.getText()));
-                    productosDetalle.set(i, productosDetalle.get(i));
+                    productosDetalleObserv.get(i).setCantidad(productosDetalleObserv.get(i).getCantidad() + Integer.valueOf(txtCantidad.getText()));
+                    productosDetalleObserv.set(i, productosDetalleObserv.get(i));
 
                 }
             }
 
         } else {
-            p.setCantidad(Integer.valueOf(txtCantidad.getText()));
-            productosDetalle.add(p);
+            producto.setCantidad(Integer.valueOf(txtCantidad.getText()));
+            productosDetalleObserv.add(producto);
         }
 
-        tablaDetalle.setItems(productosDetalle);
+        tablaDetalle.setItems(productosDetalleObserv);
 
-        for (Producto prod : productosDetalle) {
-            total += prod.getSubtotal();
+        for (Producto prod : productosDetalleObserv) {
+            subtotal += prod.getSubtotal();
         }
 
-        txtTotal.setText("$" + total);
-
+        lblSubtotal.setText("$" + df.format(subtotal));
+        txtTotal.setText("$ " + df.format(subtotal));
+        calcularTotal();
     }
 
     @FXML
     private void EliminarDetalleSeleccionado(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setContentText("Seguro desea eliminar?");
-        ButtonType btnsi = new ButtonType("Si");
-        ButtonType btnno = new ButtonType("No");
-        alert.getButtonTypes().setAll(btnsi, btnno);
-        Optional<ButtonType> showAndWait = alert.showAndWait();
-        if (showAndWait.get() == btnsi) {
-
+        if (Alerta.mostrarAlertaConfirmation("Seguro desea eliminar?")) {
             Producto pEliminar = tablaDetalle.getSelectionModel().getSelectedItem();
-            productosDetalle.remove(pEliminar);
-            total = 0.0;
-            tablaDetalle.setItems(productosDetalle);
-            for (Producto prod : productosDetalle) {
-                total += prod.getSubtotal();
+            productosDetalleObserv.remove(pEliminar);
+            subtotal = 0.0;
+            tablaDetalle.setItems(productosDetalleObserv);
+            for (Producto prod : productosDetalleObserv) {
+                subtotal += prod.getSubtotal();
 
             }
-
-            txtTotal.setText("$" + total);
+            lblSubtotal.setText("$" + df.format(subtotal));
+            txtTotal.setText("$ " + df.format(subtotal));
+            calcularTotal();
         }
     }
 
     private List<Producto> cargarTablaConFiltro(KeyEvent event) {
-        productosComboBox = new ArrayList<>();
-        pDao = new ProductoJpaController();
-        return pDao.findProducto(event.getText());
+        productosLista = new ArrayList<>();
+        productoDao = new ProductoJpaController();
+        return productoDao.findProducto(event.getText());
 
     }
 
@@ -203,35 +305,52 @@ public class PanelVentaController implements Initializable {
             Alerta.mostrarAlertaAdvertencia("No agregó ningun producto!");
         } else {
             try {
-                cabezeraDao = new FacturaCabezeraJpaController();
-                detalleDao = new FacturaDetalleJpaController();
-                FacturaCabezera facturaCabezera = new FacturaCabezera();
-                facturaCabezera = cabezeraDao.create(facturaCabezera);
-                List<FacturaDetalle> detalles = new ArrayList<>();
-                FacturaDetalle detalle;
-                for (Producto producto : productosDetalle) {
-                    detalle = new FacturaDetalle();
-                    detalle.setIdFacCabezera(facturaCabezera);
-                    detalle.setIdProducto(producto);
-                    detalle.setCantidad(producto.getCantidad());
-                    detalle.setSubtotal(producto.getSubtotal());
-                    detalle=detalleDao.create(detalle);
-                    
-                    producto.setStock(producto.getStock() - producto.getCantidad());
-                    
-                    detalles.add(detalle);
-                    producto.getFacturaDetalleList().add(detalle);
-                    pDao.edit(producto);
-                }
-                facturaCabezera.setFacturaDetalleList(detalles);
-                facturaCabezera.setFechaEmision(new Date());
-                DecimalFormat sf = new DecimalFormat("00000");
-                facturaCabezera.setNroFactura(sf.format(facturaCabezera.getId()));
-                cabezeraDao.edit(facturaCabezera);
+                if (comboBoxClientes.getSelectionModel().getSelectedItem() != null) {
+                    cliente = comboBoxClientes.getSelectionModel().getSelectedItem();
+                    facturaCabezeraDao = new FacturaCabezeraJpaController();
+                    facturaDetalleDao = new FacturaDetalleJpaController();
+                    FacturaCabezera facturaCabezera = new FacturaCabezera();
+                    facturaCabezera = facturaCabezeraDao.create(facturaCabezera);
+                    List<FacturaDetalle> detalles = new ArrayList<>();
+                    FacturaDetalle detalle;
+                    for (Producto producto : productosDetalleObserv) {
+                        detalle = new FacturaDetalle();
+                        detalle.setIdFacCabezera(facturaCabezera);
+                        detalle.setIdProducto(producto);
+                        detalle.setCantidad(producto.getCantidad());
+                        detalle.setSubtotal(producto.getSubtotal());
+                        detalle = facturaDetalleDao.create(detalle);
 
-                //generarTicketPDF(facturaCabezera);
-                Alerta.mostrarAlertaInformacion("Factura crada exitosamente!");
-                LimpiarCampos(event);
+                        producto.setStock(producto.getStock() - producto.getCantidad());
+
+                        detalles.add(detalle);
+                        producto.getFacturaDetalleList().add(detalle);
+                        productoDao.edit(producto);
+                    }
+                    facturaCabezera.setFacturaDetalleList(detalles);
+                    facturaCabezera.setFechaEmision(new Date());
+                    DecimalFormat sf = new DecimalFormat("0000");
+                    facturaCabezera.setNroFactura(sf.format(facturaCabezera.getId()));
+                    facturaCabezera.setIdCliente(cliente);
+                    if (RB_efectivo.isSelected()) {
+                        facturaCabezera.setMetodoPago("Efectivo");
+                    } else if (RB_transferencia.isSelected()) {
+                        facturaCabezera.setMetodoPago("Transferencia");
+                    } else {
+                        facturaCabezera.setMetodoPago("Cheque");
+                    }
+
+                    Double iva = comboIva.getSelectionModel().getSelectedItem();
+                    facturaCabezera.setIva(iva);
+                    facturaCabezeraDao.edit(facturaCabezera);
+
+                    //generarTicketPDF(facturaCabezera);
+                    Alerta.mostrarAlertaInformacion("Factura crada exitosamente!");
+                    LimpiarCampos(event);
+                    cliente = null;
+                } else {
+                    Alerta.mostrarAlertaAdvertencia("Debe seleccionar un cliente");
+                }
             } catch (Exception ex) {
                 Alerta.mostrarAlertaError("Hubo un error: " + ex.getMessage());
                 Logger.getLogger(PanelVentaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,17 +361,18 @@ public class PanelVentaController implements Initializable {
     @FXML
     private void LimpiarCampos(ActionEvent event) {
         txtBusqueda.setText(null);
-        productosDetalle = FXCollections.observableArrayList();
+        productosDetalleObserv = FXCollections.observableArrayList();
         txtCantidad.setText(null);
         txtDescripcion.setText(null);
         txtPrecio.setText(null);
         txtStock.setText(null);
         txtTotal.setText(null);
         total = 0.0;
-        p = new Producto();
-        tablaDetalle.setItems(productosDetalle);
-        productosObserv = FXCollections.observableArrayList();
-        comboBoxFiltrado.setItems(productosObserv);
+        subtotal = 0.0;
+        producto = new Producto();
+        tablaDetalle.setItems(productosDetalleObserv);
+        cargarComboBox();
+        lblSubtotal.setText(null);
     }
 
     private void generarTicketPDF(FacturaCabezera facturaCabezera) {
@@ -264,7 +384,7 @@ public class PanelVentaController implements Initializable {
             ticket.setPageSize(new Rectangle(200, 600));
             Paragraph parrafo = new Paragraph();
             parrafo.setAlignment(1);
-            
+
             parrafo.add("****************************");
             parrafo.add("\nRaineri Rodamientos");
             parrafo.add("\nAristobulo del Valle 588");
@@ -278,7 +398,7 @@ public class PanelVentaController implements Initializable {
             tabla.addCell("Importe");
             tabla.setHeaderRows(0);
             double total = 0.0;
-            for (Producto p : productosDetalle) {
+            for (Producto p : productosDetalleObserv) {
                 tabla.addCell(p.getCodigo());
                 tabla.addCell(p.getDescripcion());
                 tabla.addCell(p.getCantidad().toString());
@@ -302,11 +422,41 @@ public class PanelVentaController implements Initializable {
             wr.append("*****************************");
             wr.write("hola");
             wr.close();*/
-        } catch (IOException ex) {
-            Logger.getLogger(PanelVentaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DocumentException ex) {
+        } catch (IOException | DocumentException ex) {
             Logger.getLogger(PanelVentaController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    private void cargarComboBox() {
+        productoDao = new ProductoJpaController();
+        comboBoxFiltrado.getItems().clear();
+        productosObserv = FXCollections.observableArrayList();
+        productosLista = productoDao.findProductoEntities();
+        for (Producto producto : productosLista) {
+            productosObserv.add(producto);
+        }
+        comboBoxFiltrado.setItems(productosObserv);
+
+        clienteDao = new ClienteJpaController();
+        comboBoxClientes.getItems().clear();
+        ObservableList<Cliente> clienteObsv = FXCollections.observableArrayList();
+        List<Cliente> listaClientes = clienteDao.findClienteEntities();
+        for (Cliente cliente : listaClientes) {
+            clienteObsv.add(cliente);
+        }
+        comboBoxClientes.setItems(clienteObsv);
+    }
+
+    private void cargarComboIva() {
+        comboIva.getItems().clear();
+        comboIva.getItems().addAll(0.00, 10.5, 21.0);
+    }
+
+    private List<Cliente> cargarClientesConFiltro(String txt) {
+        List<Cliente> clienteList = new ArrayList<>();
+        clienteDao = new ClienteJpaController();
+        return clienteDao.findClienteEntitiesFiltro(txt);
 
     }
 

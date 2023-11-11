@@ -28,6 +28,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 
@@ -82,7 +83,14 @@ public class PanelProveedoresController implements Initializable {
             return new SimpleObjectProperty<>(sf.format(param.getValue().getFechaRegistro()));
         });
 
+                col_id.prefWidthProperty().bind(tablaProveedor.widthProperty().divide(5)); // w * 1/5
+        col_cuit.prefWidthProperty().bind(tablaProveedor.widthProperty().divide(5)); // w * 1/5
+        col_fechaRegistro.prefWidthProperty().bind(tablaProveedor.widthProperty().divide(5)); // w * 1/5
+        col_nombre.prefWidthProperty().bind(tablaProveedor.widthProperty().divide(5)); // w * 1/5
+        col_telefono.prefWidthProperty().bind(tablaProveedor.widthProperty().divide(5)); // w * 1/5
+        
         listarProveedores();
+        formatearEntradas();
     }
 
     @FXML
@@ -199,6 +207,51 @@ public class PanelProveedoresController implements Initializable {
             Alerta.mostrarAlertaAdvertencia("Debe seleccionar un proveedor!");
 
         }
+    }
+
+    private void formatearEntradas() {
+        txtTelefono.setTextFormatter(new TextFormatter<>(
+                (change) -> {
+                    String text = change.getControlNewText();
+                    for (int i = 0; i < text.length(); i++) {
+                        if (!text.matches("^\\d+$")) {
+                            return null;
+                        }
+                    }
+                    return change;
+
+                }
+        ));
+
+        txtCuit.setTextFormatter(new TextFormatter<>(
+                (change) -> {
+                    String text = change.getControlNewText();
+                    for (int i = 0; i < text.length(); i++) {
+                        if (text.length() > 11) {
+                            return null;
+                        } else {
+                            if (text.matches("^\\d+$")) {
+                                return change;
+                            } else {
+                                return change;
+                            }
+                        }
+                    }
+                    return change;
+                }
+        ));
+
+        txtCorreo.setTextFormatter(new TextFormatter<>(
+                (change) -> {
+                    String newText = change.getControlNewText();
+                    if (newText.matches("^\\w+@\\w+.\\w+$")) {
+                        return change;
+                    } else {
+                        return change;
+                    }
+                }
+        ));
+
     }
 
 }
